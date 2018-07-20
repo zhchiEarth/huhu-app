@@ -4,12 +4,17 @@ import {
   WingBlank,
   Button,
   Radio,
-  Icon
+  Icon,
+  WhiteSpace
 } from 'antd-mobile';
 import Header  from '../../components/Header'
 import './buy.less'
 
-const RadioItem = Radio.RadioItem;
+import selected from '../../images/selected.png'
+import unselected from '../../images/unselected.png'
+import wechatLogin from '../../images/wechat.png'
+import alipayLogin from '../../images/alipay.png'
+
 
 export default class CarrierBuy extends React.Component {
   state = {
@@ -36,9 +41,10 @@ export default class CarrierBuy extends React.Component {
         <Card full>
           <Card.Body className="buy-card">
             <div className="title">会员权益：</div>
-            <div>
-              <p className="explain mt10">1.包月会员可免费收听会员专区的所有内容。</p>
-              <p className="explain">2.专区每月10号前新增5集故事。</p>
+            <WhiteSpace size="sm" />
+            <div className="introduction mt10">
+              <p className="explain">1.包月会员可免费收听会员专区的所有内容。</p>
+              <p className="explain mt10">2.专区每月10号前新增5集故事。</p>
             </div>
           </Card.Body>
         </Card>
@@ -55,29 +61,38 @@ export default class CarrierBuy extends React.Component {
           <dt>会员包月方式：</dt>
           <dd>
             <span>15元/月</span>
-            <Icon type="check-circle-o" />
+            <img src={selected} className="right" />
           </dd>
           <dd>
             <span>20元/月</span>
-            <Icon type="check-circle-o" />
+            <img src={unselected} className="right" />
           </dd>
           <dd>
             <span>25元/月</span>
-            <Icon type="check-circle-o" />
+            <img src={unselected} className="right" />
           </dd>
         </dl>
-        <dl className="pay-mode buy-card flex flex-v">
-          <dt>支付方式：</dt>
-          <dd>
+        <div className="pay-mode flex flex-v">
+          <h1 className="title padd20 pt20">支付方式：</h1>
+          <div className="pay-item padd20">
+            <img src={alipayLogin} className="pay-logo" />
             <span>支付宝</span>
-            <Icon type="check-circle-o" />
-          </dd>
-          <dd>
+            <img src={selected} className="right" />
+          </div>
+          <div className="hr"></div>
+          <div className="pay-item padd20 pb12">
+            <img src={wechatLogin} className="pay-logo" />
             <span>微信</span>
-            <Icon type="check-circle-o" />
-          </dd>
-        </dl>
-        <WingBlank size="lg"><Button className="become-member">成为会员</Button></WingBlank>
+            <img src={unselected} className="right" />
+          </div>
+        </div>
+        <WhiteSpace size="xl" />
+        <WhiteSpace size="xl" />
+        <WingBlank size="lg">
+        <WingBlank size="sm">
+          <Button className="become-member">成为会员</Button>
+        </WingBlank>
+        </WingBlank>
       </div>
     );
   }
