@@ -3,8 +3,6 @@ import {
   Card,
   WingBlank,
   Button,
-  Radio,
-  Icon,
   WhiteSpace
 } from 'antd-mobile';
 import Header  from '../../components/Header'
@@ -18,23 +16,35 @@ import alipayLogin from '../../images/alipay.png'
 
 export default class CarrierBuy extends React.Component {
   state = {
-    content: "<p>1.包月会员可免费收听会员专区的所有内容。</p><p>2.专区每月10号前新增5集故事。</p>",
-    value: 0
+    content: "1.包月会员可免费收听会员专区的所有内容",
+    value: 1,
+    cates: [
+      {id:1,title:'15元/月', selected:selected},
+      {id:2,title:'20元/月',selected:unselected},
+      {id:3,title:'25元/月',selected:unselected},
+    ]
   }
 
-  onChange = (value) => {
-    console.log('checkbox');
+  handleSelectCate = (id) => {
+    let cates = this.state.cates.map((cate) => {
+      console.log(id)
+      if (cate.id == id) {
+        cate.selected = selected
+        
+      } else {
+        cate.selected = unselected
+      }
+      return cate
+    })
     this.setState({
-      value,
-    });
-  };
+      cates: cates
+    })
+  }
+
+
 
   render() {
-     const data = [
-      { value: 0, label: 'doctor' },
-      { value: 1, label: 'bachelor' },
-    ];
-    const {value} = this.state;
+    let { cates } = this.state
     return (
       <div>
         <Header name = "会员专区"  />
@@ -48,29 +58,18 @@ export default class CarrierBuy extends React.Component {
             </div>
           </Card.Body>
         </Card>
-        {/* <div className="buy-form">
-          <div className="title">用户信息填写：</div>
-          <form>
-            <div className="buy-input mt10">
-              <label>手机号码</label>
-              <input placeholder="手机号码" />
-            </div>
-          </form>
-        </div> */}
         <dl className="product-list buy-card flex flex-v">
           <dt>会员包月方式：</dt>
-          <dd>
-            <span>15元/月</span>
-            <img src={selected} className="right" />
-          </dd>
-          <dd>
-            <span>20元/月</span>
-            <img src={unselected} className="right" />
-          </dd>
-          <dd>
-            <span>25元/月</span>
-            <img src={unselected} className="right" />
-          </dd>
+          {
+            cates.length > 0 ? 
+            cates.map((cate,i) => (
+              <dd onClick={() => this.handleSelectCate(cate.id)} key={i}>
+                <span>{cate.title}</span>
+                <img src={cate.selected}  className="right" />
+              </dd>
+            ))
+            : ''
+          }
         </dl>
         <div className="pay-mode flex flex-v">
           <h1 className="title padd20 pt20">支付方式：</h1>
@@ -85,6 +84,7 @@ export default class CarrierBuy extends React.Component {
             <span>微信</span>
             <img src={unselected} className="right" />
           </div>
+          <div className="hr"></div>
         </div>
         <WhiteSpace size="xl" />
         <WhiteSpace size="xl" />
