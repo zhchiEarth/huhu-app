@@ -27,10 +27,8 @@ export default class CarrierBuy extends React.Component {
 
   handleSelectCate = (id) => {
     let cates = this.state.cates.map((cate) => {
-      console.log(id)
       if (cate.id == id) {
         cate.selected = selected
-        
       } else {
         cate.selected = unselected
       }
@@ -40,8 +38,6 @@ export default class CarrierBuy extends React.Component {
       cates: cates
     })
   }
-
-
 
   render() {
     let { cates } = this.state
