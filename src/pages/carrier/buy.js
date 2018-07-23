@@ -7,6 +7,7 @@ import {
 } from 'antd-mobile';
 import Header  from '../../components/Header'
 import './buy.less'
+import axios from '../../axios'
 
 import selected from '../../images/selected.png'
 import unselected from '../../images/unselected.png'
@@ -18,50 +19,89 @@ export default class CarrierBuy extends React.Component {
   state = {
     content: "1.包月会员可免费收听会员专区的所有内容",
     value: 1,
-    cates: [
-      {id:1,title:'15元/月', selected:selected},
-      {id:2,title:'20元/月',selected:unselected},
-      {id:3,title:'25元/月',selected:unselected},
-    ]
+    cates: [],
+    selectedCate: {
+      content:[]
+    }
+  }
+
+  componentDidMount(){
+      this.requestList()
+  }
+
+  requestList = ()=>{
+      let _this = this;
+      axios.ajax({
+          url:'/carrier/getCateList',
+          data:{}
+      }).then((res)=>{
+          this.setState({
+              cates: res.msg,
+              selectedCate: this.textConvert(res.msg[0])
+          })
+      })
+    }
+
+  textConvert = (cate) => {
+      if (typeof cate.content == "string") {
+        cate.content = cate.content.split("\n")
+      }
+      return cate
   }
 
   handleSelectCate = (id) => {
-    let cates = this.state.cates.map((cate) => {
-      if (cate.id == id) {
-        cate.selected = selected
-      } else {
-        cate.selected = unselected
+    let cates = this.state.cates.forEach((cate, index) => {
+      if (id === cate.id) {
+        this.setState({
+            selectedCate: this.textConvert(cate)
+        })
       }
-      return cate
-    })
-    this.setState({
-      cates: cates
     })
   }
 
+  /**
+   * 支付
+   */
+  toPay = () => {
+      axios.ajax({
+          url:'/carrier/confirmPay',
+          data:{cate_id: this.state.selectedCate.id}
+      }).then((res)=>{
+        console.log(res)
+          // this.setState({
+          //     cates: res.msg,
+          //     selectedCate: this.textConvert(res.msg[0])
+          // })
+      })
+  }
+
   render() {
-    let { cates } = this.state
+    let { cates, selectedCate } = this.state
     return (
       <div>
-        <Header name = "会员专区"  />
+        <Header name = "会员专区" rightContent="" />
         <Card full>
           <Card.Body className="buy-card">
             <div className="title">会员权益：</div>
             <WhiteSpace size="sm" />
             <div className="introduction mt10">
-              <p className="explain">1.包月会员可免费收听会员专区的所有内容。</p>
-              <p className="explain mt10">2.专区每月10号前新增5集故事。</p>
+               {
+                 selectedCate.content.length > 0 ?
+                 selectedCate.content.map((ctx, index) => (
+                   <p key={index}>{ctx}</p>
+                 )) : ''
+               }
             </div>
           </Card.Body>
         </Card>
         <dl className="product-list buy-card flex flex-v">
           <dt>会员包月方式：</dt>
           {
-            cates.length > 0 ? 
+            cates.length > 0 ?
             cates.map((cate,i) => (
               <dd onClick={() => this.handleSelectCate(cate.id)} key={i}>
-                <span>{cate.title}</span>
-                <img src={cate.selected}  className="right" />
+                <span>{cate.name}</span>
+                <img src={ cate.id == selectedCate.id ? selected : unselected }  className="right" />
               </dd>
             ))
             : ''
@@ -86,7 +126,7 @@ export default class CarrierBuy extends React.Component {
         <WhiteSpace size="xl" />
         <WingBlank size="lg">
         <WingBlank size="sm">
-          <Button className="become-member">成为会员</Button>
+          <Button className="become-member" onClick={this.toPay}>成为会员</Button>
         </WingBlank>
         </WingBlank>
       </div>
