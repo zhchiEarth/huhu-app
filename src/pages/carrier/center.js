@@ -1,27 +1,45 @@
 import React from 'react'
 import Header  from '../../components/Header'
-import { Modal, Button } from 'antd-mobile';
-// import {withRouter} from "react-router-dom";
-
+import { Modal, Button } from 'antd-mobile'
 import './center.less'
-
-
+import { getOrderList } from '../../api/carrier'
 import moreImg from '../../images/more.png'
 
 export default class CarrierCenter extends React.Component {
 
-   constructor(props) {
-      super(props);
-      this.state = {
-        modal1: false,
-        modal2: false,
-      };
+  //  constructor(props) {
+  //     super(props);
+
+  //   }
+    state = {
+      modalShow: false,
+      orderList: [],
+      popupContent: []
     }
 
-      showModal = key => (e) => {
-      e.preventDefault(); // 修复 Android 上点击穿透
+  componentDidMount(){
+    this.requestList()
+  }
+
+  requestList = ()=>{
+    getOrderList({}).then((res)=>{
       this.setState({
-        [key]: true,
+          orderList: res
+      })
+    })
+  }
+
+  textConvert = (content) => {
+      if (typeof content == "string") {
+        content = content.split("\n")
+      }
+      return content
+  }
+
+    showModal = key => (e) => {
+      this.setState({
+        modalShow: true,
+        popupContent: this.textConvert(this.state.orderList[key].content)
       });
     }
     onClose = key => () => {
@@ -30,89 +48,64 @@ export default class CarrierCenter extends React.Component {
       });
     }
 
-    goStories = () => {
-      this.props.history.push("/carrier/stories/" + 1);
+    goStories = (id) => {
+      this.props.history.push("/carrier/cate/" + id)
     }
 
-
-
   render() {
+    let { orderList, popupContent } = this.state
     return (
       <div>
         <Header name = "会员专区"  />
-        <div className="carrier-center-list  ">
-          <div className="item">
-            <div className="content" onClick={() => this.goStories(1)}>
-              <div className="right">
+        <div className="carrier-center-list">
+          {
+            orderList.length > 0 ?
+            orderList.map((order, key) => (
+              <div className="item" key={key}>
+                <div className="content" onClick={() => this.goStories(order.cate_id)}>
+                  <div className="right">
+                    <img src={order.cate_image} />
+                  </div>
+                  <div className="left">
+                    <h2 className="title text-overflow">{order.cate_name}</h2>
+                    <p className="introduction text-overflow">{order.introduction}</p>
+                    <span className="sum">集数：{order.story_num}</span>
+                  </div>
+                </div>
+                <div className="footer" onClick={this.showModal(key)}>
+                  <p className="deadline">{order.cate_name}   会员期限: 5.22号前免费收听</p>
+                  <img src={moreImg} />
+                </div>
               </div>
-              <div className="left">
-                <h2 className="title">深海里的龙骸石</h2>
-                <p className="introduction">一句话简介一句话简介一介一介</p>
-                <span className="sum">集数：100</span>
-              </div>
-            </div>
-            <div className="footer" onClick={this.showModal('modal1')}>
-              <p className="deadline">15元/月   会员期限: 5.22号前免费收听</p>
-              <img src={moreImg} />
-            </div>
-          </div>
-          <div className="hr"></div>
-
-          <div className="item">
-            <div className="content">
-              <div className="right">
-              </div>
-              <div className="left">
-                <h2 className="title">深海里的龙骸石</h2>
-                <p className="introduction">一句话简介一句话简介一介一介</p>
-                <span className="sum">集数：100</span>
-              </div>
-            </div>
-            <div className="footer">
-              <p className="deadline">15元/月   会员期限: 5.22号前免费收听</p>
-              <img src={moreImg} />
-            </div>
-          </div>
-          <div className="hr"></div>
-
-          <div className="item">
-            <div className="content">
-              <div className="right">
-              </div>
-              <div className="left">
-                <h2 className="title">深海里的龙骸石</h2>
-                <p className="introduction">一句话简介一句话简介一介一介</p>
-                <span className="sum">集数：100</span>
-              </div>
-            </div>
-            <div className="footer">
-              <p className="deadline">15元/月   会员期限: 5.22号前免费收听</p>
-              <img src={moreImg} />
-            </div>
-          </div>
+            )) : ''
+          }
 
         </div>
         <Modal
-          visible={this.state.modal1}
+          visible={this.state.modalShow}
           transparent
           // popup
           maskClosable={false}
-          onClose={this.onClose('modal1')}
-          // title="会员权益"
-          className="carrier-center-modal"
-        >
-            <h3 className="title">会员权益</h3>
-            <div className="content">
-              1.包月会员可免费收听会员专区的所有内容。
-
-              2.专区每月10号前新增5集故事。
-            </div>
-             <div className="footer">
-                <Button onClick={this.onClose('modal1')} className="close">我知道了</Button>
+          onClose={this.onClose('modalShow')}
+          className="carrier-center-modal">
+            <div className="container">
+              <h3 className="title">会员权益</h3>
+              <div className="content">
+                {
+                  popupContent && popupContent.length > 0  ?
+                  popupContent.map((content, i) => (
+                    <p key={i}>{content}</p>
+                  ))
+                  : ''
+                }
+              </div>
+              <div className="footer">
+                  <Button onClick={this.onClose('modalShow')} className="close">我知道了</Button>
+              </div>
             </div>
         </Modal>
       </div>
-    );
+    )
   }
 
 }

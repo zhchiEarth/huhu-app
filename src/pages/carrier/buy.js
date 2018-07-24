@@ -7,7 +7,7 @@ import {
 } from 'antd-mobile';
 import Header  from '../../components/Header'
 import './buy.less'
-import axios from '../../axios'
+import { cateList, aliPay } from '../../api/carrier'
 
 import selected from '../../images/selected.png'
 import unselected from '../../images/unselected.png'
@@ -17,8 +17,6 @@ import alipayLogin from '../../images/alipay.png'
 
 export default class CarrierBuy extends React.Component {
   state = {
-    content: "1.包月会员可免费收听会员专区的所有内容",
-    value: 1,
     cates: [],
     selectedCate: {
       content:[]
@@ -26,21 +24,17 @@ export default class CarrierBuy extends React.Component {
   }
 
   componentDidMount(){
-      this.requestList()
+    this.requestList()
   }
 
   requestList = ()=>{
-      let _this = this;
-      axios.ajax({
-          url:'/carrier/getCateList',
-          data:{}
-      }).then((res)=>{
-          this.setState({
-              cates: res.msg,
-              selectedCate: this.textConvert(res.msg[0])
-          })
-      })
-    }
+    cateList({}).then((res)=>{
+        this.setState({
+            cates: res,
+            selectedCate: this.textConvert(res[0])
+        })
+    })
+  }
 
   textConvert = (cate) => {
       if (typeof cate.content == "string") {
@@ -63,20 +57,23 @@ export default class CarrierBuy extends React.Component {
    * 支付
    */
   toPay = () => {
-      axios.ajax({
-          url:'/carrier/confirmPay',
-          data:{cate_id: this.state.selectedCate.id}
-      }).then((res)=>{
-        console.log(res)
+    console.log('topay')
+      // axios.ajax({
+      //     url:'/carrier/confirmPay',
+      //     method: 'get'
+      //     data:{cate_id: this.state.selectedCate.id}
+      // }).then((res)=>{
+      //   console.log(res)
           // this.setState({
           //     cates: res.msg,
           //     selectedCate: this.textConvert(res.msg[0])
           // })
-      })
+      // })
   }
 
   render() {
     let { cates, selectedCate } = this.state
+    console.log(cates.length)
     return (
       <div>
         <Header name = "会员专区" rightContent="" />
