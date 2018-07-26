@@ -6,11 +6,6 @@ import { getOrderList } from '../../api/carrier'
 import moreImg from '../../images/more.png'
 
 export default class CarrierCenter extends React.Component {
-
-  //  constructor(props) {
-  //     super(props);
-
-  //   }
     state = {
       modalShow: false,
       orderList: [],

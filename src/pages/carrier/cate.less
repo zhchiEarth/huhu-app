@@ -27,18 +27,33 @@
     }
   }
 
-  .cate-list{
-    .cate-item{
+  .story-list{
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
+    .story-item{
+      flex-direction: row;
       border-bottom: .0625rem solid #E0E0E0;
+      display: flex;
+      align-items: center;
+      .story-item-left{
+        width: .875rem;
+        img {
+          height: 1.5rem;
+        }
+      }
       .container{
-        padding: 1rem;
+        padding: 1rem 1rem 1rem 0.5rem;
         display: flex;
         align-items: center;
-        .cate-img{
+        .story-img{
           width: 2.5rem;
           height: 2.5rem;
           display:block;
           background: #515151;
+          img{
+            height: 2.5rem;
+          }
         }
         .content{
           margin-left: .625rem;

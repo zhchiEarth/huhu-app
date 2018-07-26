@@ -22,7 +22,7 @@ export default class ERouter extends React.Component {
               <Route exact path = "/carrier/center"  component = {CarrierCenter}/>
               <Route exact path = "/carrier/cate/:id"  component = {CarrierCate}/>
               <Route exact path = "/carrier"  component = {Carrier}/>
-              <Route exact path="/" component={Home} />
+              <Route exact path="/" component={Carrier} />
             </Switch>
         </App>
       </Router>

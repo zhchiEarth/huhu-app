@@ -8,12 +8,15 @@ import {
 export default class Home extends React.Component{
   render() {
     return (
+      <div>
     <NavBar
       mode="light"
       icon={<Icon type="left" />}
       onLeftClick={() => console.log('onLeftClick')}
       rightContent={<span>会员专区</span>}
     >NavBar</NavBar>
+    home
+    </div>
     );
   }
 }

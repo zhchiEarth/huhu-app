@@ -2,17 +2,20 @@ import React from 'react'
 import Header  from '../../components/Header'
 import { Modal, Button } from 'antd-mobile';
 import './cate.less'
-import { getCate } from '../../api/carrier'
+import { getCate, storyList } from '../../api/carrier'
 import headsetImg from '../../images/headset.png'
 import timeImg from '../../images/playtime.png'
+import nowplayImg from '../../images/nowplay_icon.png'
+import lastplayImg from '../../images/nowplay_icon.png'
 
 export default class CarrierCate extends React.Component{
   constructor(props) {
       super(props);
       this.state = {
         cateId: this.props.match.params.id,
-        title: '',
         cateItem: {},
+        stories: [],
+        currentMusic: {}
       };
     }
 
@@ -28,11 +31,36 @@ export default class CarrierCate extends React.Component{
           cateItem: res
         })
     })
+
+    storyList({
+        cate_id: this.state.cateId
+      }).then((res) => {
+        this.setState({
+          stories: res.story,
+          currentMusic: res.story[0]
+        })
+        let audio = this.refs.audio;
+        audio.autoplay = true
+        audio.play();
+      })
   }
 
+  /**
+   * 选择不同的故事
+   */
+  handleSelectStory = (storyKey) => {
+     this.setState({
+        currentMusic: this.state.stories[storyKey]
+      })
+        // let audio = this.refs.audio
+    //   console.log(audio.src, audio.currentSrc)
+    //   console.log(storyKey)
+      // audio.src = this.state.stories[storyKey].filename
+      // audio.play();
+  }
 
   render() {
-    let { cateItem } = this.state
+    let { cateItem, stories, currentMusic } = this.state
     return (
       <div className="carrier-cate-container">
         <Header name ={ cateItem.name }  />
@@ -40,22 +68,35 @@ export default class CarrierCate extends React.Component{
           <span className="title">更新至{cateItem.story_new_num}集，共{cateItem.story_num}集</span>
           <div className="bg-img"><img src={cateItem.image} /></div>
         </div>
-          <ul className="cate-list">
-            <li className="cate-item">
-              <div className="container">
-                <div className="cate-img"></div>
-                <div className="content">
-                    <span>螃蟹公主在哪里</span>
-                    <div className="introduction">
-                      <img src={headsetImg} />
-                      <span>466</span>
-                      <img src={timeImg} />
-                      <span>03 : 16</span>
-                    </div>
-                </div>
+        <ul className="story-list">
+          {
+            stories.length > 0 ?
+            stories.map((story,i) => (
+            <li className="story-item" key={i} onClick={() => this.handleSelectStory(i)}>
+              <div className="story-item-left">
+                {
+                  (currentMusic && currentMusic.id == story.id) ?
+                  <img src={nowplayImg} /> : ''
+                }
               </div>
-            </li>
-          </ul>
+                <div className="container">
+                  <div className="story-img"><img src={story.image} /></div>
+                  <div className="content">
+                      <span>{ story.title }</span>
+                      <div className="introduction">
+                        <img src={headsetImg} />
+                        <span>{ story.view_num }</span>
+                        <img src={timeImg} />
+                        <span>{ story.duration }</span>
+                      </div>
+                  </div>
+                </div>
+              </li>
+          )) : ''
+          }
+        </ul>
+        <audio src={ (currentMusic && currentMusic.filename && currentMusic.filename.length > 0) ? currentMusic.filename : '' } ref="audio"></audio>
+
 
       </div>
     );

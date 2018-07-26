@@ -7,7 +7,7 @@ import {
 } from 'antd-mobile';
 import Header  from '../../components/Header'
 import './buy.less'
-import { cateList, aliPay } from '../../api/carrier'
+import { cateList, confirmPay } from '../../api/carrier'
 
 import selected from '../../images/selected.png'
 import unselected from '../../images/unselected.png'
@@ -20,7 +20,8 @@ export default class CarrierBuy extends React.Component {
     cates: [],
     selectedCate: {
       content:[]
-    }
+    },
+    alipayFrom: null
   }
 
   componentDidMount(){
@@ -44,7 +45,7 @@ export default class CarrierBuy extends React.Component {
   }
 
   handleSelectCate = (id) => {
-    let cates = this.state.cates.forEach((cate, index) => {
+    this.state.cates.forEach((cate, index) => {
       if (id === cate.id) {
         this.setState({
             selectedCate: this.textConvert(cate)
@@ -57,22 +58,21 @@ export default class CarrierBuy extends React.Component {
    * 支付
    */
   toPay = () => {
+    let _this = this;
     console.log('topay')
-      // axios.ajax({
-      //     url:'/carrier/confirmPay',
-      //     method: 'get'
-      //     data:{cate_id: this.state.selectedCate.id}
-      // }).then((res)=>{
-      //   console.log(res)
-          // this.setState({
-          //     cates: res.msg,
-          //     selectedCate: this.textConvert(res.msg[0])
-          // })
-      // })
+    confirmPay({
+      cate_id: this.state.selectedCate.id
+    }).then((res) => {
+      console.log(res)
+      _this.setState({
+          alipayFrom : res
+      });
+      document.forms['alipaysubmit'].submit();
+    })
   }
 
   render() {
-    let { cates, selectedCate } = this.state
+    let { cates, selectedCate, alipayFrom } = this.state
     console.log(cates.length)
     return (
       <div>
@@ -119,11 +119,17 @@ export default class CarrierBuy extends React.Component {
           </div>
           <div className="hr"></div>
         </div>
+        {alipayFrom?<div /*  后端给的表单 - 支付宝  */
+                    dangerouslySetInnerHTML={{
+                        __html: alipayFrom.split('<script>')[0]
+                    }}
+                />:''}
+
         <WhiteSpace size="xl" />
         <WhiteSpace size="xl" />
         <WingBlank size="lg">
         <WingBlank size="sm">
-          <Button className="become-member" onClick={this.toPay}>成为会员</Button>
+          <Button className="become-member" size="large" onClick={this.toPay}>成为会员</Button>
         </WingBlank>
         </WingBlank>
       </div>

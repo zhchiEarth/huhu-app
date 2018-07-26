@@ -2,16 +2,51 @@ import React from 'react'
 import {
   Flex,
   Button,
-  WingBlank
+  WingBlank,
+  Toast
 } from 'antd-mobile';
 import { Link } from 'react-router-dom'
-
-
+import Cookies from 'js-cookie'
+import { signValid } from '../../api/carrier'
 import Header  from '../../components/Header'
 import './index.less'
 import imgbg from  '../../images/unicom_bg.png'
 
 export default class Carrier extends React.Component {
+
+  constructor(props) {
+    super(props)
+    let sign = this.getQueryString('sign')
+    if (!Cookies.get('sign') && (!sign || sign.length === 0)) {
+      Toast.fail('sign获取失败')
+      return ;
+    }
+
+    if (sign && sign.length > 0) {
+      let loginSign = this.hex2bin(sign)
+      signValid({sign: loginSign}).then((res)=>{
+        Cookies.set('sign', loginSign, {
+          extends: 1 //1day
+        })
+      })
+    }
+  }
+
+  getQueryString = function (name) {
+      let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+      let r = window.location.search.substr(1).match(reg);
+      if (r !== null) return unescape(r[2]);
+      return null;
+  };
+
+    hex2bin = (str) => {
+        let sbin = "";
+        for ( let i = 0; i < str.length; i += 2 ) {
+            var v =  str.substr(i, 2);
+            sbin += String.fromCharCode(parseInt(v,16))
+        }
+        return sbin;
+    }
 
   gpBay = () => {
     this.props.history.push("/carrier/buy");
