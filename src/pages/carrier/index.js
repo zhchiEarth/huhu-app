@@ -11,6 +11,7 @@ import { signValid } from '../../api/carrier'
 import Header  from '../../components/Header'
 import './index.less'
 import imgbg from  '../../images/unicom_bg.png'
+import backImg from '../../images/back.png'
 
 export default class Carrier extends React.Component {
 
@@ -48,17 +49,22 @@ export default class Carrier extends React.Component {
         return sbin;
     }
 
-  gpBay = () => {
-    this.props.history.push("/carrier/buy");
-  }
+    gpBay = () => {
+      this.props.history.push("/carrier/buy");
+    }
 
   render() {
     return (
       <div>
-        <Header name = "中国联通客户专属" rightMenu={<Link to="/carrier/center" style={{color:'#ffffff'}}>会员专区</Link>} />
+        <Header
+        name = "中国联通客户专属"
+        leftMenu={<a href={ 'http://www.baidu.com/' + '#hh:' + encodeURI('{opentype:back}')}>
+              <img src={backImg} className="back-img" alt="" />
+            </a>}
+        rightMenu={<Link to="/carrier/center" style={{color:'#ffffff'}}>会员专区</Link>} />
         <Flex>
           <div className="unicom-bg">
-            <img src={imgbg} />
+            <img src={imgbg} alt=""/>
           </div>
         </Flex>
 

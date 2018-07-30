@@ -1,12 +1,12 @@
 import React from 'react'
 import Header  from '../../components/Header'
-import { Modal, Button } from 'antd-mobile';
+// import { Modal, Button } from 'antd-mobile';
 import './cate.less'
 import { getCate, storyList } from '../../api/carrier'
 import headsetImg from '../../images/headset.png'
 import timeImg from '../../images/playtime.png'
 import nowplayImg from '../../images/nowplay_icon.png'
-import lastplayImg from '../../images/nowplay_icon.png'
+// import lastplayImg from '../../images/nowplay_icon.png'
 
 export default class CarrierCate extends React.Component{
   constructor(props) {
@@ -66,7 +66,7 @@ export default class CarrierCate extends React.Component{
         <Header name ={ cateItem.name }  />
         <div className="carrier-cate-header">
           <span className="title">更新至{cateItem.story_new_num}集，共{cateItem.story_num}集</span>
-          <div className="bg-img"><img src={cateItem.image} /></div>
+          <div className="bg-img"><img src={cateItem.image} alt="" /></div>
         </div>
         <ul className="story-list">
           {
@@ -75,18 +75,18 @@ export default class CarrierCate extends React.Component{
             <li className="story-item" key={i} onClick={() => this.handleSelectStory(i)}>
               <div className="story-item-left">
                 {
-                  (currentMusic && currentMusic.id == story.id) ?
-                  <img src={nowplayImg} /> : ''
+                  (currentMusic && currentMusic.id === story.id) ?
+                  <img src={nowplayImg} alt="" /> : ''
                 }
               </div>
                 <div className="container">
-                  <div className="story-img"><img src={story.image} /></div>
+                  <div className="story-img"><img src={story.image} alt="" /></div>
                   <div className="content">
                       <span>{ story.title }</span>
                       <div className="introduction">
-                        <img src={headsetImg} />
+                        <img src={headsetImg} alt="" />
                         <span>{ story.view_num }</span>
-                        <img src={timeImg} />
+                        <img src={timeImg} alt="" />
                         <span>{ story.duration }</span>
                       </div>
                   </div>

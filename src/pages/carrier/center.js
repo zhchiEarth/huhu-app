@@ -3,6 +3,7 @@ import Header  from '../../components/Header'
 import { Modal, Button } from 'antd-mobile'
 import './center.less'
 import { getOrderList } from '../../api/carrier'
+import { formatValidityDate } from '../../utils/utils'
 import moreImg from '../../images/more.png'
 
 export default class CarrierCenter extends React.Component {
@@ -25,7 +26,7 @@ export default class CarrierCenter extends React.Component {
   }
 
   textConvert = (content) => {
-      if (typeof content == "string") {
+      if (typeof content === "string") {
         content = content.split("\n")
       }
       return content
@@ -47,6 +48,8 @@ export default class CarrierCenter extends React.Component {
       this.props.history.push("/carrier/cate/" + id)
     }
 
+
+
   render() {
     let { orderList, popupContent } = this.state
     return (
@@ -59,7 +62,7 @@ export default class CarrierCenter extends React.Component {
               <div className="item" key={key}>
                 <div className="content" onClick={() => this.goStories(order.cate_id)}>
                   <div className="right">
-                    <img src={order.cate_image} />
+                    <img src={order.cate_image} alt="" />
                   </div>
                   <div className="left">
                     <h2 className="title text-overflow">{order.cate_name}</h2>
@@ -68,8 +71,8 @@ export default class CarrierCenter extends React.Component {
                   </div>
                 </div>
                 <div className="footer" onClick={this.showModal(key)}>
-                  <p className="deadline">{order.cate_name}   会员期限: 5.22号前免费收听</p>
-                  <img src={moreImg} />
+                  <p className="deadline">{order.cate_name}   会员期限: { formatValidityDate(order.validity)}号前免费收听</p>
+                  <img src={moreImg} alt="" />
                 </div>
               </div>
             )) : ''

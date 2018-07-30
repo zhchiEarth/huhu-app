@@ -9,7 +9,7 @@ import Carrier from './pages/carrier';
 import CarrierBuy from './pages/carrier/buy';
 import CarrierCenter from './pages/carrier/center';
 import CarrierCate from './pages/carrier/cate';
-import Home from './pages/home';
+// import Home from './pages/home';
 
 export default class ERouter extends React.Component {
 

@@ -38,7 +38,7 @@ export default class CarrierBuy extends React.Component {
   }
 
   textConvert = (cate) => {
-      if (typeof cate.content == "string") {
+      if (typeof cate.content === "string") {
         cate.content = cate.content.split("\n")
       }
       return cate
@@ -59,7 +59,6 @@ export default class CarrierBuy extends React.Component {
    */
   toPay = () => {
     let _this = this;
-    console.log('topay')
     confirmPay({
       cate_id: this.state.selectedCate.id
     }).then((res) => {
@@ -98,7 +97,7 @@ export default class CarrierBuy extends React.Component {
             cates.map((cate,i) => (
               <dd onClick={() => this.handleSelectCate(cate.id)} key={i}>
                 <span>{cate.name}</span>
-                <img src={ cate.id == selectedCate.id ? selected : unselected }  className="right" />
+                <img src={ cate.id === selectedCate.id ? selected : unselected }  alt="" className="right" />
               </dd>
             ))
             : ''
@@ -107,15 +106,15 @@ export default class CarrierBuy extends React.Component {
         <div className="pay-mode flex flex-v">
           <h1 className="title padd20 pt20">支付方式：</h1>
           <div className="pay-item padd20">
-            <img src={alipayLogin} className="pay-logo" />
+            <img src={alipayLogin} className="pay-logo" alt="" />
             <span>支付宝</span>
-            <img src={selected} className="right" />
+            <img src={selected} className="right" alt="" />
           </div>
           <div className="hr"></div>
           <div className="pay-item padd20 pb12">
-            <img src={wechatLogin} className="pay-logo" />
+            <img src={wechatLogin} className="pay-logo" alt="" />
             <span>微信</span>
-            <img src={unselected} className="right" />
+            <img src={unselected} className="right" alt="" />
           </div>
           <div className="hr"></div>
         </div>
